@@ -8,9 +8,11 @@ const publicUser = (user) => ({
   id: user._id,
   fullName: user.fullName,
   email: user.email,
-  phone: user.phone,
   address: user.address,
   functionAddress: user.functionAddress,
+  primaryEventLocation: user.primaryEventLocation,
+  preferredCity: user.preferredCity,
+  userType: user.userType,
   role: user.role,
   isVerified: user.isVerified
 });
@@ -35,31 +37,44 @@ const publicPartner = (partner) => ({
 });
 
 const register = asyncHandler(async (req, res) => {
-  const { fullName, email, mobile, phone, address, functionAddress, password, otpChannel = 'email' } = req.body;
-  const normalizedPhone = phone || mobile;
+  const {
+    fullName,
+    email,
+    password,
+    confirmPassword,
+    primaryEventLocation,
+    preferredCity,
+    userType = 'Event Organizer'
+  } = req.body;
 
-  if (!fullName || !email || !normalizedPhone || !address || !functionAddress || !password) {
+  if (!fullName || !email || !password || !confirmPassword || !primaryEventLocation || !preferredCity) {
     res.status(400);
     throw new Error('All registration fields are required');
   }
 
-  const existing = await User.findOne({ $or: [{ email: email.toLowerCase() }, { phone: normalizedPhone }] });
+  if (password !== confirmPassword) {
+    res.status(400);
+    throw new Error('Passwords do not match');
+  }
+
+  const existing = await User.findOne({ email: email.toLowerCase() });
   if (existing) {
     res.status(409);
-    throw new Error('User already exists with this email or phone');
+    throw new Error('User already exists with this email');
   }
 
   const user = await User.create({
     fullName,
     email,
-    phone: normalizedPhone,
-    mobile: normalizedPhone,
-    address,
-    functionAddress,
-    password
+    password,
+    primaryEventLocation,
+    preferredCity,
+    userType,
+    address: primaryEventLocation,
+    functionAddress: primaryEventLocation
   });
 
-  await createOtp(user, 'register', otpChannel === 'phone' ? 'phone' : 'email');
+  await createOtp(user, 'register');
 
   res.status(201).json({
     success: true,
@@ -113,7 +128,7 @@ const registerPartner = asyncHandler(async (req, res) => {
     password
   });
 
-  await createOtp(partner, 'register', 'email');
+  await createOtp(partner, 'register');
 
   res.status(201).json({
     success: true,
@@ -124,9 +139,8 @@ const registerPartner = asyncHandler(async (req, res) => {
 
 const verifyRegistrationOtp = asyncHandler(async (req, res) => {
   const { identifier, otp } = req.body;
-  const user = await User.findOne({
-    $or: [{ email: String(identifier).toLowerCase() }, { phone: identifier }]
-  }).select('+password +otp.code +otp.expiresAt +otp.purpose +otp.channel');
+  const user = await User.findOne({ email: String(identifier).toLowerCase() })
+    .select('+password +otp.code +otp.expiresAt +otp.purpose +otp.channel');
 
   if (!user || !verifyOtp(user, otp, 'register')) {
     res.status(400);
@@ -146,9 +160,8 @@ const verifyRegistrationOtp = asyncHandler(async (req, res) => {
 
 const verifyPartnerOtp = asyncHandler(async (req, res) => {
   const { identifier, otp } = req.body;
-  const partner = await Partner.findOne({
-    $or: [{ email: String(identifier).toLowerCase() }, { phone: identifier }]
-  }).select('+password +otp.code +otp.expiresAt +otp.purpose +otp.channel');
+  const partner = await Partner.findOne({ email: String(identifier).toLowerCase() })
+    .select('+password +otp.code +otp.expiresAt +otp.purpose +otp.channel');
 
   if (!partner || !verifyOtp(partner, otp, 'register')) {
     res.status(400);
@@ -167,25 +180,25 @@ const verifyPartnerOtp = asyncHandler(async (req, res) => {
 });
 
 const resendOtp = asyncHandler(async (req, res) => {
-  const { identifier, purpose = 'register', channel = 'email' } = req.body;
-  const user = await User.findOne({
-    $or: [{ email: String(identifier).toLowerCase() }, { phone: identifier }]
-  }).select('+otp.code +otp.expiresAt +otp.purpose +otp.channel');
-
-  if (!user) {
-    res.status(404);
-    throw new Error('User not found');
+  const { identifier, purpose = 'register' } = req.body;
+  const email = String(identifier).toLowerCase();
+  let account = await User.findOne({ email }).select('+otp.code +otp.expiresAt +otp.purpose +otp.channel');
+  if (!account) {
+    account = await Partner.findOne({ email }).select('+otp.code +otp.expiresAt +otp.purpose +otp.channel');
   }
 
-  await createOtp(user, purpose, channel === 'phone' ? 'phone' : 'email');
-  res.json({ success: true, message: 'OTP sent successfully' });
+  if (!account) {
+    res.status(404);
+    throw new Error('Account not found');
+  }
+
+  await createOtp(account, purpose);
+  res.json({ success: true, message: 'Email OTP sent successfully' });
 });
 
 const login = asyncHandler(async (req, res) => {
   const { identifier, password } = req.body;
-  const user = await User.findOne({
-    $or: [{ email: String(identifier).toLowerCase() }, { phone: identifier }]
-  }).select('+password');
+  const user = await User.findOne({ email: String(identifier).toLowerCase() }).select('+password');
 
   if (!user || !(await user.matchPassword(password))) {
     res.status(401);
@@ -202,9 +215,7 @@ const login = asyncHandler(async (req, res) => {
 
 const partnerLogin = asyncHandler(async (req, res) => {
   const { identifier, password } = req.body;
-  const partner = await Partner.findOne({
-    $or: [{ email: String(identifier).toLowerCase() }, { phone: identifier }]
-  }).select('+password');
+  const partner = await Partner.findOne({ email: String(identifier).toLowerCase() }).select('+password');
 
   if (!partner || !(await partner.matchPassword(password))) {
     res.status(401);
@@ -244,25 +255,22 @@ const adminLogin = asyncHandler(async (req, res) => {
 });
 
 const forgotPassword = asyncHandler(async (req, res) => {
-  const { identifier, channel = 'email' } = req.body;
-  const user = await User.findOne({
-    $or: [{ email: String(identifier).toLowerCase() }, { phone: identifier }]
-  });
+  const { identifier } = req.body;
+  const user = await User.findOne({ email: String(identifier).toLowerCase() });
 
   if (!user) {
     res.status(404);
     throw new Error('User not found');
   }
 
-  await createOtp(user, 'reset', channel === 'phone' ? 'phone' : 'email');
-  res.json({ success: true, message: 'Password reset OTP sent' });
+  await createOtp(user, 'reset');
+  res.json({ success: true, message: 'Password reset OTP sent to email' });
 });
 
 const resetPassword = asyncHandler(async (req, res) => {
   const { identifier, otp, password } = req.body;
-  const user = await User.findOne({
-    $or: [{ email: String(identifier).toLowerCase() }, { phone: identifier }]
-  }).select('+password +otp.code +otp.expiresAt +otp.purpose +otp.channel');
+  const user = await User.findOne({ email: String(identifier).toLowerCase() })
+    .select('+password +otp.code +otp.expiresAt +otp.purpose +otp.channel');
 
   if (!user || !verifyOtp(user, otp, 'reset')) {
     res.status(400);

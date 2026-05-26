@@ -5,6 +5,7 @@ const {
   getOrders,
   assignPartner,
   updateOrderStatus,
+  updateOrderPricing,
   getPartners,
   updatePartnerStatus,
   getNotifications,
@@ -21,6 +22,7 @@ router.get('/users', getUsers);
 router.get('/orders', getOrders);
 router.patch('/orders/:id/assign-partner', assignPartner);
 router.patch('/orders/:id/status', updateOrderStatus);
+router.patch('/orders/:id/pricing', updateOrderPricing);
 router.get('/partners', getPartners);
 router.patch('/partners/:id/status', updatePartnerStatus);
 router.get('/notifications', getNotifications);

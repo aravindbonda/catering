@@ -36,29 +36,39 @@ app.use((req, res) => {
 app.use(errorMiddleware);
 
 const ensureAdminUser = async () => {
-  const email = 'admin@catering.com';
-  const existing = await User.findOne({ email });
+  try {
+    const email = 'admin@catering.com';
+    const existing = await User.findOne({ email });
 
-  if (existing) {
-    existing.fullName = existing.fullName || 'CaterBliss Admin';
-    existing.role = 'admin';
-    existing.isVerified = true;
-    existing.password = 'Admin@123';
-    await existing.save();
-    return;
+    if (existing) {
+      existing.fullName = existing.fullName || 'CaterBliss Admin';
+      existing.primaryEventLocation = existing.primaryEventLocation || 'Hyderabad';
+      existing.preferredCity = existing.preferredCity || 'Hyderabad';
+      existing.address = existing.address || 'CaterBliss Head Office';
+      existing.functionAddress = existing.functionAddress || 'CaterBliss Head Office';
+      existing.role = 'admin';
+      existing.isVerified = true;
+      existing.password = 'Admin@123';
+      await existing.save();
+      return;
+    }
+
+    await User.create({
+      fullName: 'CaterBliss Admin',
+      email,
+      phone: '9999999999',
+      mobile: '9999999999',
+      password: 'Admin@123',
+      address: 'CaterBliss Head Office',
+      functionAddress: 'CaterBliss Head Office',
+      primaryEventLocation: 'Hyderabad',
+      preferredCity: 'Hyderabad',
+      role: 'admin',
+      isVerified: true
+    });
+  } catch (error) {
+    console.error(`Admin user setup skipped: ${error.message}`);
   }
-
-  await User.create({
-    fullName: 'CaterBliss Admin',
-    email,
-    phone: '9999999999',
-    mobile: '9999999999',
-    password: 'Admin@123',
-    address: 'CaterBliss Head Office',
-    functionAddress: 'CaterBliss Head Office',
-    role: 'admin',
-    isVerified: true
-  });
 };
 
 if (require.main === module) {

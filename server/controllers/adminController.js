@@ -55,7 +55,7 @@ const getUsers = asyncHandler(async (req, res) => {
   const filter = role ? { role } : { role: { $ne: 'admin' } };
 
   const users = await User.find(filter)
-    .select('fullName email phone address role isVerified createdAt')
+    .select('fullName email preferredCity primaryEventLocation role isVerified createdAt')
     .sort('-createdAt')
     .limit(limit * 1)
     .skip((page - 1) * limit);
@@ -79,8 +79,9 @@ const getOrders = asyncHandler(async (req, res) => {
   const filter = status ? { status } : {};
 
   const orders = await Order.find(filter)
-    .populate('userId', 'fullName email phone')
-    .populate('partnerId', 'fullName cateringBusinessName phone')
+    .populate('userId', 'fullName email preferredCity primaryEventLocation')
+    .populate('partnerId', 'fullName cateringBusinessName phone rating serviceAreas')
+    .populate('selectedVendorId', 'fullName cateringBusinessName phone rating serviceAreas')
     .sort('-createdAt')
     .limit(limit * 1)
     .skip((page - 1) * limit);
@@ -115,7 +116,7 @@ const assignPartner = asyncHandler(async (req, res) => {
   }
 
   order.partnerId = partner._id;
-  order.status = 'Accepted';
+  order.status = 'Payment Pending';
   order.assignedAt = new Date();
   await order.save();
 
@@ -164,6 +165,29 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
     order.cancelledAt = new Date();
   }
 
+  await order.save();
+
+  res.json({ success: true, order });
+});
+
+const updateOrderPricing = asyncHandler(async (req, res) => {
+  const { setupCharges, transportationCharges, serviceCharge, gst, grandTotal } = req.body;
+  const order = await Order.findById(req.params.id);
+
+  if (!order) {
+    res.status(404);
+    throw new Error('Order not found');
+  }
+
+  order.pricing = {
+    ...order.pricing,
+    setupCharges: Number(setupCharges ?? order.pricing?.setupCharges ?? 0),
+    transportationCharges: Number(transportationCharges ?? order.pricing?.transportationCharges ?? 0),
+    serviceCharge: Number(serviceCharge ?? order.pricing?.serviceCharge ?? 0),
+    gst: Number(gst ?? order.pricing?.gst ?? 0),
+    grandTotal: Number(grandTotal ?? order.totalAmount)
+  };
+  order.totalAmount = order.pricing.grandTotal;
   await order.save();
 
   res.json({ success: true, order });
@@ -277,6 +301,7 @@ module.exports = {
   getOrders,
   assignPartner,
   updateOrderStatus,
+  updateOrderPricing,
   getPartners,
   updatePartnerStatus,
   getNotifications,

@@ -2,16 +2,24 @@ const Order = require('../models/Order');
 const Menu = require('../models/Menu');
 const Notification = require('../models/Notification');
 const asyncHandler = require('../middleware/asyncHandler');
+const mongoose = require('mongoose');
 
 const createOrder = asyncHandler(async (req, res) => {
   const {
     items,
     guestCount,
+    adultsCount,
+    childrenCount,
     eventDate,
     eventTime,
     eventAddress,
     eventType,
-    specialInstructions
+    specialInstructions,
+    uploadedFiles = [],
+    aiExtractedItems = [],
+    assignmentPreference = 'admin',
+    selectedVendorId,
+    pricing = {}
   } = req.body;
 
   if (!Array.isArray(items) || items.length === 0) {
@@ -29,37 +37,59 @@ const createOrder = asyncHandler(async (req, res) => {
     throw new Error('Event date and address are required');
   }
 
-  // Validate and enrich items with menu data
+  // Validate and enrich items. Uploaded/AI-generated requests may not map to
+  // existing Menu documents yet, so direct item pricing is accepted for review.
   const enrichedItems = [];
   let totalAmount = 0;
 
   for (const item of items) {
-    const menuItem = await Menu.findById(item.menuId);
-    if (!menuItem || !menuItem.isAvailable) {
-      throw new Error(`Menu item ${item.name} is not available`);
+    let menuItem = null;
+    if (item.menuId && mongoose.Types.ObjectId.isValid(item.menuId)) {
+      menuItem = await Menu.findById(item.menuId);
+    }
+
+    if (menuItem && menuItem.isAvailable) {
+      enrichedItems.push({
+        menuId: menuItem._id,
+        name: menuItem.name,
+        category: menuItem.category,
+        price: menuItem.price,
+        quantity: item.quantity || 1
+      });
+
+      totalAmount += menuItem.price * (item.quantity || 1);
+      continue;
     }
 
     enrichedItems.push({
-      menuId: menuItem._id,
-      name: menuItem.name,
-      category: menuItem.category,
-      price: menuItem.price,
-      quantity: item.quantity || 1
+      name: item.name,
+      category: item.category || 'Menu',
+      price: Number(item.price) || 0,
+      quantity: Number(item.quantity) || 1
     });
 
-    totalAmount += menuItem.price * (item.quantity || 1);
+    totalAmount += (Number(item.price) || 0) * (Number(item.quantity) || 1);
   }
+
+  const grandTotal = Number(pricing.grandTotal) || totalAmount * guestCount;
 
   const order = await Order.create({
     userId: req.user._id,
+    selectedVendorId,
     items: enrichedItems,
+    uploadedFiles,
+    aiExtractedItems: aiExtractedItems.length ? aiExtractedItems : enrichedItems,
     guestCount,
+    adultsCount,
+    childrenCount,
     eventDate: new Date(eventDate),
     eventTime,
     eventAddress,
     eventType,
     specialInstructions,
-    totalAmount
+    assignmentPreference,
+    pricing,
+    totalAmount: grandTotal
   });
 
   // Create notification for user
@@ -75,7 +105,7 @@ const createOrder = asyncHandler(async (req, res) => {
   res.status(201).json({
     success: true,
     order,
-    message: 'Order placed successfully. You will be notified once a partner is assigned.'
+    message: 'Request submitted successfully. Admin will review and assign the best catering partner.'
   });
 });
 
@@ -86,6 +116,7 @@ const getUserOrders = asyncHandler(async (req, res) => {
 
   const orders = await Order.find(filter)
     .populate('partnerId', 'fullName cateringBusinessName phone rating')
+    .populate('selectedVendorId', 'fullName cateringBusinessName phone rating')
     .sort({ createdAt: -1 })
     .limit(limit * 1)
     .skip((page - 1) * limit);
@@ -113,7 +144,7 @@ const getOrder = asyncHandler(async (req, res) => {
       { userId: req.user._id } // Admin can see all
     ]
   })
-    .populate('userId', 'fullName email phone address')
+    .populate('userId', 'fullName email address')
     .populate('partnerId', 'fullName cateringBusinessName phone rating serviceAreas');
 
   if (!order) {
