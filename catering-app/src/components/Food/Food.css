@@ -1,0 +1,255 @@
+/* ============================
+   FOOD SECTION STYLES
+   ============================ */
+
+.food {
+  padding: 100px 0 80px;
+  background: #F8F8F8;
+  position: relative;
+  overflow: hidden;
+}
+
+.food::before {
+  content: '';
+  position: absolute;
+  top: -60px;
+  right: -60px;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(252,128,25,0.08) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.food__container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+/* ---- Section Header ---- */
+.food__header {
+  text-align: center;
+  margin-bottom: 52px;
+}
+
+.food__eyebrow {
+  font-family: 'Poppins', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #FC8019;
+  display: block;
+  margin-bottom: 14px;
+}
+
+.food__title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(30px, 4vw, 46px);
+  font-weight: 700;
+  color: #282C3F;
+  line-height: 1.2;
+  margin-bottom: 16px;
+}
+
+.food__title-accent {
+  color: #FC8019;
+  font-style: italic;
+}
+
+.food__subtitle {
+  font-family: 'Poppins', sans-serif;
+  font-size: 16px;
+  color: #686B78;
+  max-width: 500px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+/* ---- Filters ---- */
+.food__filters {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 48px;
+  flex-wrap: wrap;
+}
+
+.food__filter-btn {
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 10px 22px;
+  border-radius: 100px;
+  border: 1.5px solid #e0e0e0;
+  background: #fff;
+  color: #686B78;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.food__filter-btn:hover {
+  border-color: #FC8019;
+  color: #FC8019;
+}
+
+.food__filter-btn--active {
+  background: #FC8019;
+  border-color: #FC8019;
+  color: #fff;
+  box-shadow: 0 6px 20px rgba(252, 128, 25, 0.25);
+}
+
+/* ---- Cards Grid ---- */
+.food__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+/* ---- Card ---- */
+.food__card {
+  background: #fff;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1.5px solid #f0f0f0;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: foodCardIn 0.5s ease both;
+  cursor: default;
+}
+
+@keyframes foodCardIn {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.food__card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.12);
+}
+
+/* ---- Card Image Area ---- */
+.food__card-img-wrap {
+  position: relative;
+  overflow: hidden;
+  height: 220px;
+}
+
+/* RTL sliding image animation */
+@keyframes slideRTL {
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.food__card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  animation: slideRTL 0.7s cubic-bezier(0.4, 0, 0.2, 1) both;
+  transition: transform 0.5s ease;
+}
+
+/* Staggered delay per card via parent */
+.food__card:nth-child(1) .food__card-img { animation-delay: 0.05s; }
+.food__card:nth-child(2) .food__card-img { animation-delay: 0.13s; }
+.food__card:nth-child(3) .food__card-img { animation-delay: 0.21s; }
+.food__card:nth-child(4) .food__card-img { animation-delay: 0.29s; }
+.food__card:nth-child(5) .food__card-img { animation-delay: 0.37s; }
+.food__card:nth-child(6) .food__card-img { animation-delay: 0.45s; }
+
+.food__card:hover .food__card-img {
+  transform: scale(1.06);
+}
+
+.food__card-tag {
+  font-family: 'Poppins', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 100px;
+  position: absolute;
+  bottom: 12px;
+  left: 14px;
+}
+
+/* ---- Card Body ---- */
+.food__card-body {
+  padding: 20px 22px 22px;
+}
+
+.food__card-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 19px;
+  font-weight: 700;
+  color: #282C3F;
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+
+.food__card-desc {
+  font-family: 'Poppins', sans-serif;
+  font-size: 13.5px;
+  color: #7a7a7a;
+  line-height: 1.65;
+  margin-bottom: 18px;
+}
+
+/* ---- Card Footer (no price) ---- */
+.food__card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.food__card-btn {
+  font-family: 'Poppins', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  border: none;
+  padding: 9px 18px;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.food__card-btn:hover {
+  filter: brightness(0.88);
+  transform: scale(1.04);
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 1024px) {
+  .food__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .food {
+    padding: 64px 0 60px;
+  }
+
+  .food__container {
+    padding: 0 16px;
+  }
+
+  .food__grid {
+    grid-template-columns: 1fr;
+  }
+}
