@@ -67,10 +67,10 @@ function AdminDashboard() {
     <section className="section-wrap">
       <div className="grid gap-6 lg:grid-cols-[240px_1fr]">
         <aside className="panel-card h-fit lg:sticky lg:top-28">
-          <h1 className="text-2xl font-extrabold text-[#282C3F]">Admin Panel</h1>
+          <h1 className="text-2xl font-extrabold text-[#7A2E1F]">Admin Panel</h1>
           <div className="mt-5 grid gap-2">
             {['Dashboard', 'Users', 'Notifications'].map((item) => (
-              <button className={`rounded-xl px-4 py-3 text-left text-sm font-bold transition hover:-translate-y-0.5 ${active === item ? 'bg-saffron-600 text-white shadow-lg shadow-orange-100' : 'bg-[#F8F8F8] text-[#686B78] hover:bg-saffron-50 hover:text-saffron-700'}`} key={item} onClick={() => setActive(item)} type="button">
+              <button className={`rounded-2xl px-4 py-3 text-left text-sm font-bold transition hover:-translate-y-1 ${active === item ? 'bg-[#7A2E1F] text-white shadow-lg shadow-[#7A2E1F]/20' : 'bg-[#F5F1EC] text-[#755F54] hover:bg-[#FFF7EF] hover:text-[#7A2E1F]'}`} key={item} onClick={() => setActive(item)} type="button">
                 {item}
               </button>
             ))}
@@ -78,9 +78,11 @@ function AdminDashboard() {
         </aside>
 
         <div className="grid gap-6">
-          <div className="rounded-2xl bg-[#282C3F] p-6 text-white shadow-soft">
-            <p className="font-bold uppercase text-orange-100">Dashboard</p>
-            <h2 className="mt-2 text-3xl font-extrabold">Catering operations overview</h2>
+          <div className="luxe-section rounded-[2rem] p-6 text-white shadow-luxe">
+            <div className="relative z-10">
+              <p className="font-bold uppercase text-[#D9B08C]">Dashboard</p>
+              <h2 className="mt-2 text-3xl font-extrabold">Catering operations overview</h2>
+            </div>
           </div>
           {error && <div className="rounded-lg bg-red-50 p-4 font-semibold text-red-700">{error}</div>}
 
@@ -94,8 +96,8 @@ function AdminDashboard() {
 
               <div className="grid gap-6 xl:grid-cols-[0.85fr_1.15fr]">
                 <div className="panel-card">
-                  <h3 className="text-xl font-bold">Add Catering Partner</h3>
-                  <p className="mt-2 text-sm text-stone-500">If email is provided, the partner can login with Partner@123.</p>
+                  <h3 className="text-xl font-bold text-[#1F1F1F]">Add Catering Partner</h3>
+                  <p className="mt-2 text-sm text-[#755F54]">If email is provided, the partner can login with Partner@123.</p>
                   <form className="mt-4 grid gap-3" onSubmit={createPartner}>
                     <input className="input-field" placeholder="Name" value={partnerForm.name} onChange={(e) => setPartnerForm({ ...partnerForm, name: e.target.value })} required />
                     <input className="input-field" type="email" placeholder="Email" value={partnerForm.email} onChange={(e) => setPartnerForm({ ...partnerForm, email: e.target.value })} />
@@ -125,9 +127,9 @@ function AdminDashboard() {
               <h3 className="text-xl font-bold">New Registration Notifications</h3>
               <div className="mt-4 grid gap-3">
                 {notifications.map((note) => (
-                  <div className="rounded-lg border border-orange-100 bg-saffron-50 p-4" key={note.id}>
-                    <p className="font-bold text-stone-800">{note.text}</p>
-                    <p className="mt-1 text-sm text-stone-500">{note.date}</p>
+                  <div className="rounded-3xl border border-[#EADCCB] bg-[#FFF7EF] p-4 transition hover:-translate-y-1 hover:shadow-soft" key={note.id}>
+                    <p className="font-bold text-[#1F1F1F]">{note.text}</p>
+                    <p className="mt-1 text-sm text-[#755F54]">{note.date}</p>
                   </div>
                 ))}
               </div>
@@ -141,19 +143,19 @@ function AdminDashboard() {
 
 function Stat({ label, value }) {
   return (
-    <div className="panel-card">
-      <span className="text-sm font-bold uppercase text-stone-500">{label}</span>
-      <strong className="mt-2 block text-4xl text-saffron-600">{value}</strong>
+    <div className="luxe-card p-5">
+      <span className="text-sm font-bold uppercase text-[#755F54]">{label}</span>
+      <strong className="mt-2 block text-4xl text-[#7A2E1F]">{value}</strong>
     </div>
   );
 }
 
 function UsersTable({ users, title, compact = false }) {
   return (
-    <div className="panel-card overflow-x-auto">
-      <h3 className="mb-4 text-xl font-bold">{title}</h3>
+    <div className="theme-table-card overflow-x-auto">
+      <h3 className="mb-4 text-xl font-bold text-[#1F1F1F]">{title}</h3>
       <table className="w-full min-w-[820px] text-left text-sm">
-        <thead className="bg-[#F8F8F8] text-[#686B78]">
+        <thead className="bg-[#F5F1EC] text-[#755F54]">
           <tr>
             <th className="p-4">Name</th>
             <th className="p-4">Email</th>
@@ -176,7 +178,7 @@ function UsersTable({ users, title, compact = false }) {
           ))}
           {!users.length && (
             <tr>
-              <td className="p-6 text-stone-500" colSpan={compact ? 5 : 6}>No users found yet.</td>
+              <td className="p-6 text-[#755F54]" colSpan={compact ? 5 : 6}>No users found yet.</td>
             </tr>
           )}
         </tbody>
@@ -187,10 +189,10 @@ function UsersTable({ users, title, compact = false }) {
 
 function OrdersTable({ orders, partners, assignPartner, updateStatus, updatePricing }) {
   return (
-    <div className="panel-card overflow-x-auto">
-      <h3 className="mb-4 text-xl font-bold">Booking Requests & Partner Assignment</h3>
+    <div className="theme-table-card overflow-x-auto">
+      <h3 className="mb-4 text-xl font-bold text-[#1F1F1F]">Booking Requests & Partner Assignment</h3>
       <table className="w-full min-w-[1180px] text-left text-sm">
-        <thead className="bg-[#F8F8F8] text-[#686B78]">
+        <thead className="bg-[#F5F1EC] text-[#755F54]">
           <tr>
             <th className="p-4">Order</th>
             <th className="p-4">User</th>
@@ -212,23 +214,23 @@ function OrdersTable({ orders, partners, assignPartner, updateStatus, updatePric
               <td className="p-4">
                 <div className="max-w-52">
                   <strong className="block">{order.items?.length || 0} extracted items</strong>
-                  <span className="mt-1 block truncate text-xs text-stone-500">
+                  <span className="mt-1 block truncate text-xs text-[#755F54]">
                     {(order.aiExtractedItems || order.items || []).map((item) => item.name).slice(0, 3).join(', ')}
                   </span>
                 </div>
               </td>
               <td className="p-4">
                 <strong>{order.guestCount}</strong>
-                <span className="block text-xs text-stone-500">{order.adultsCount || 0} adults, {order.childrenCount || 0} children</span>
+                <span className="block text-xs text-[#755F54]">{order.adultsCount || 0} adults, {order.childrenCount || 0} children</span>
               </td>
               <td className="p-4 max-w-56 truncate">{order.eventAddress}</td>
               <td className="p-4 font-bold">Rs.{(order.totalAmount || 0).toLocaleString('en-IN')}</td>
               <td className="p-4">
                 <div className="grid gap-1">
                   {(order.uploadedFiles || []).slice(0, 2).map((file) => (
-                    <span className="rounded-full bg-orange-50 px-2 py-1 text-xs font-bold text-saffron-700" key={file.name}>{file.name}</span>
+                    <span className="rounded-full bg-[#FFF7EF] px-2 py-1 text-xs font-bold text-[#7A2E1F]" key={file.name}>{file.name}</span>
                   ))}
-                  {!order.uploadedFiles?.length && <span className="text-xs text-stone-400">No files</span>}
+                  {!order.uploadedFiles?.length && <span className="text-xs text-[#9B8170]">No files</span>}
                 </div>
               </td>
               <td className="p-4">

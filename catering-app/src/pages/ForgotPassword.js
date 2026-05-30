@@ -28,7 +28,7 @@ function ForgotPassword() {
         {message && <div className="alert neutral">{message}</div>}
         <input name="identifier" type="email" placeholder="Email address" value={form.identifier} onChange={update} required />
         {step === 'request' ? (
-          <p className="text-sm text-stone-600">We will send a one-time code to your registered email.</p>
+          <p className="text-sm text-[#755F54]">We will send a one-time code to your registered email.</p>
         ) : (
           <>
             <input name="otp" placeholder="OTP" value={form.otp} onChange={update} required />

@@ -14,42 +14,54 @@ function PartnerDashboard() {
 
   return (
     <section className="section-wrap">
-      <div className="mb-8 rounded-2xl bg-[#282C3F] p-6 text-white shadow-soft">
-        <p className="font-bold uppercase text-orange-100">Partner Panel</p>
-        <h1 className="mt-2 text-3xl font-extrabold">{partner?.name || 'Catering Partner'}</h1>
-        <p className="mt-2 text-white/75">Assigned catering orders and customer event details.</p>
+      <div className="luxe-section mb-8 rounded-[2rem] p-8 text-white shadow-luxe">
+        <div className="relative z-10">
+          <p className="font-bold uppercase text-[#D9B08C]">Partner Panel</p>
+          <h1 className="mt-2 text-3xl font-extrabold">{partner?.name || partner?.cateringBusinessName || 'Catering Partner'}</h1>
+          <p className="mt-2 text-white/75">Assigned catering orders and customer event details.</p>
+        </div>
       </div>
 
-      <div className="overflow-x-auto rounded-2xl border border-[#E9E9EB] bg-white shadow-soft">
-        <table className="w-full min-w-[920px] text-left text-sm">
-          <thead className="bg-[#F8F8F8] text-[#686B78]">
-            <tr>
-              <th className="p-4">Order</th>
-              <th className="p-4">Customer</th>
-              <th className="p-4">Email</th>
-              <th className="p-4">Guests</th>
-              <th className="p-4">Address</th>
-              <th className="p-4">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {orders.map((order) => (
-              <tr className="border-t border-stone-100" key={order._id}>
-                <td className="p-4 font-bold">{order._id.slice(-8)}</td>
-                <td className="p-4">{order.userId?.fullName}</td>
-                <td className="p-4">{order.userId?.email}</td>
-                <td className="p-4">{order.attendees}</td>
-                <td className="p-4">{order.eventAddress || order.userId?.functionAddress}</td>
-                <td className="p-4"><span className="rounded-full bg-saffron-50 px-3 py-1 text-xs font-bold text-saffron-700">{order.status}</span></td>
-              </tr>
-            ))}
-            {!orders.length && (
-              <tr>
-                <td className="p-6 text-stone-500" colSpan="6">No assigned orders yet.</td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        {orders.map((order) => (
+          <article className="luxe-card p-5" key={order._id}>
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-[#755F54]">Order</p>
+                <h2 className="mt-1 text-2xl font-black text-[#7A2E1F]">{order._id.slice(-8)}</h2>
+              </div>
+              <span className="rounded-full bg-[#FFF7EF] px-3 py-1 text-xs font-extrabold text-[#7A2E1F]">{order.status}</span>
+            </div>
+            <div className="mt-5 grid gap-3 text-sm">
+              <div className="rounded-2xl bg-[#F5F1EC] p-4">
+                <span className="block text-xs font-bold uppercase text-[#755F54]">Customer</span>
+                <strong className="mt-1 block text-[#1F1F1F]">{order.userId?.fullName || 'Customer'}</strong>
+                <span className="mt-1 block text-[#755F54]">{order.userId?.email}</span>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="rounded-2xl bg-[#FFF7EF] p-4">
+                  <span className="block text-xs font-bold uppercase text-[#755F54]">Guests</span>
+                  <strong className="mt-1 block text-[#1F1F1F]">{order.attendees || order.guestCount || '-'}</strong>
+                </div>
+                <div className="rounded-2xl bg-[#FFF7EF] p-4">
+                  <span className="block text-xs font-bold uppercase text-[#755F54]">Status</span>
+                  <strong className="mt-1 block text-[#1F1F1F]">{order.status}</strong>
+                </div>
+              </div>
+              <div className="rounded-2xl border border-[#EADCCB] p-4">
+                <span className="block text-xs font-bold uppercase text-[#755F54]">Address</span>
+                <p className="mt-1 leading-6 text-[#1F1F1F]">{order.eventAddress || order.userId?.functionAddress || 'Address pending'}</p>
+              </div>
+            </div>
+          </article>
+        ))}
+        {!orders.length && (
+          <div className="panel-card md:col-span-2 xl:col-span-3">
+            <div className="animate-pulse rounded-3xl bg-[#F5F1EC] p-8 text-center font-bold text-[#755F54]">
+              No assigned orders yet.
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );

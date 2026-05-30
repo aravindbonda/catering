@@ -3,7 +3,7 @@
    ============================ */
 
 .footer {
-  background: #F8F8F8;
+  background: #F5F1EC;
   position: relative;
 }
 
@@ -21,7 +21,7 @@
 
 /* ---- Body ---- */
 .footer__body {
-  background: #282C3F;
+  background: #4B1D14;
   padding: 64px 0 40px;
 }
 

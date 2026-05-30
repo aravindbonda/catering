@@ -61,8 +61,8 @@ function PartnerRegister() {
       <form className="panel-card w-full max-w-4xl" onSubmit={submit}>
         <div className="text-center">
           <p className="eyebrow">Partner Registration</p>
-          <h1 className="mt-2 text-3xl font-extrabold text-[#282C3F]">Join CaterBliss Network</h1>
-          <p className="mt-2 text-sm text-[#686B78]">Register your catering business and start receiving orders</p>
+          <h1 className="mt-2 text-3xl font-extrabold text-[#1F1F1F]">Join CaterBliss Network</h1>
+          <p className="mt-2 text-sm text-[#755F54]">Register your catering business and start receiving orders</p>
         </div>
 
         {error && (
@@ -74,7 +74,7 @@ function PartnerRegister() {
         <div className="mt-6 grid gap-4 md:grid-cols-2">
           {/* Personal Information */}
           <div className="md:col-span-2">
-            <h3 className="mb-3 text-lg font-extrabold text-[#282C3F]">Personal Information</h3>
+            <h3 className="mb-3 text-lg font-extrabold text-[#7A2E1F]">Personal Information</h3>
           </div>
 
           <input
@@ -105,7 +105,7 @@ function PartnerRegister() {
 
           {/* Business Information */}
           <div className="md:col-span-2 mt-4">
-            <h3 className="mb-3 text-lg font-extrabold text-[#282C3F]">Business Information</h3>
+            <h3 className="mb-3 text-lg font-extrabold text-[#7A2E1F]">Business Information</h3>
           </div>
 
           <input
@@ -127,7 +127,7 @@ function PartnerRegister() {
 
           {/* Location Information */}
           <div className="md:col-span-2 mt-4">
-            <h3 className="mb-3 text-lg font-extrabold text-[#282C3F]">Service Location</h3>
+            <h3 className="mb-3 text-lg font-extrabold text-[#7A2E1F]">Service Location</h3>
           </div>
 
           <input
@@ -165,7 +165,7 @@ function PartnerRegister() {
 
           {/* Account Security */}
           <div className="md:col-span-2 mt-4">
-            <h3 className="mb-3 text-lg font-extrabold text-[#282C3F]">Account Security</h3>
+            <h3 className="mb-3 text-lg font-extrabold text-[#7A2E1F]">Account Security</h3>
           </div>
 
           <input
@@ -199,9 +199,9 @@ function PartnerRegister() {
         </button>
 
         <div className="mt-6 text-center">
-          <p className="text-sm text-[#686B78]">
+          <p className="text-sm text-[#755F54]">
             Already have an account?{' '}
-            <a href="/login" className="font-bold text-saffron-700 hover:text-saffron-600">
+            <a href="/login" className="font-bold text-[#7A2E1F] hover:text-[#FC8019]">
               Sign in here
             </a>
           </p>

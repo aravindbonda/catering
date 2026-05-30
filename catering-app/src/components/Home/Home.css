@@ -9,9 +9,9 @@
   --primary:       #FC8019;
   --primary-dark:  #e46f12;
   --primary-light: #ffeadb;
-  --dark:          #282C3F;
-  --gray:          #686B78;
-  --light-gray:    #F8F8F8;
+  --dark:          #1F1F1F;
+  --gray:          #755F54;
+  --light-gray:    #F5F1EC;
   --white:         #ffffff;
   --transition:    all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -163,7 +163,7 @@ Poppins', sans-serif;
    CTA BANNER
 ======================== */
 .home__cta {
-  background: #282C3F;
+  background: #4B1D14;
   padding: 88px 8%;
   text-align: center;
   position: relative;

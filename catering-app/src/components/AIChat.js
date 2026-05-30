@@ -48,12 +48,12 @@ const AIChat = () => {
         maxWidth: "800px",
         margin: "40px auto",
         padding: "28px",
-        border: "1px solid #E9E9EB",
+        border: "1px solid #EADCCB",
         borderRadius: "24px",
         fontFamily: "Poppins, system-ui, sans-serif",
         background: "#ffffff",
-        color: "#282C3F",
-        boxShadow: "0 18px 55px rgba(40, 44, 63, 0.10)",
+        color: "#1F1F1F",
+        boxShadow: "0 22px 60px rgba(73, 31, 20, 0.13)",
       }}
     >
       <h2>DeepSeek AI Integration</h2>
@@ -69,7 +69,7 @@ const AIChat = () => {
           width: "100%",
           padding: "12px",
           borderRadius: "8px",
-          border: "1px solid #E9E9EB",
+          border: "1px solid #EADCCB",
           resize: "none",
           fontSize: "16px",
           outlineColor: "#FC8019",
@@ -102,7 +102,7 @@ const AIChat = () => {
           style={{
             marginTop: "25px",
             padding: "20px",
-            backgroundColor: "#F8F8F8",
+            backgroundColor: "#F5F1EC",
             borderRadius: "16px",
             whiteSpace: "pre-wrap",
           }}

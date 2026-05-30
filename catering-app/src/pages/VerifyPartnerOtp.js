@@ -43,8 +43,8 @@ function VerifyPartnerOtp() {
       <form className="panel-card w-full max-w-md" onSubmit={submit}>
         <div className="text-center">
           <p className="eyebrow">Partner Verification</p>
-          <h1 className="mt-2 text-3xl font-extrabold text-[#282C3F]">Verify Your Email</h1>
-          <p className="mt-2 text-sm text-[#686B78]">
+          <h1 className="mt-2 text-3xl font-extrabold text-[#1F1F1F]">Verify Your Email</h1>
+          <p className="mt-2 text-sm text-[#755F54]">
             We've sent a 6-digit OTP to <strong>{identifier}</strong>
           </p>
         </div>
@@ -56,7 +56,7 @@ function VerifyPartnerOtp() {
         )}
 
         <div className="mt-6">
-          <label className="mb-2 block text-sm font-bold text-[#282C3F]">
+          <label className="mb-2 block text-sm font-bold text-[#1F1F1F]">
             Enter OTP
           </label>
           <input
@@ -67,7 +67,7 @@ function VerifyPartnerOtp() {
             maxLength="6"
             required
           />
-          <p className="mt-2 text-xs text-[#686B78]">
+          <p className="mt-2 text-xs text-[#755F54]">
             Enter the 6-digit code sent to your email
           </p>
         </div>
@@ -81,12 +81,12 @@ function VerifyPartnerOtp() {
         </button>
 
         <div className="mt-6 text-center">
-          <p className="text-sm text-[#686B78]">
+          <p className="text-sm text-[#755F54]">
             Didn't receive the code?{' '}
             <button
               type="button"
               onClick={resendOtp}
-              className="font-bold text-saffron-700 hover:text-saffron-600"
+              className="font-bold text-[#7A2E1F] hover:text-[#FC8019]"
             >
               Resend OTP
             </button>

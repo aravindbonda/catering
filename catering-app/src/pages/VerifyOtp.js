@@ -30,9 +30,9 @@ function VerifyOtp() {
   return (
     <section className="grid min-h-[75vh] place-items-center px-4 py-12">
       <form className="panel-card w-full max-w-md" onSubmit={submit}>
-        <p className="font-bold uppercase text-saffron-600">Email Verification</p>
-        <h1 className="mt-2 text-3xl font-extrabold">Verify your email</h1>
-        {message && <div className="mt-4 rounded-xl bg-saffron-50 p-3 text-sm font-semibold text-saffron-700">{message}</div>}
+        <p className="eyebrow">Email Verification</p>
+        <h1 className="mt-2 text-3xl font-extrabold text-[#1F1F1F]">Verify your email</h1>
+        {message && <div className="mt-4 rounded-xl bg-[#FFF7EF] p-3 text-sm font-semibold text-[#7A2E1F]">{message}</div>}
         <div className="mt-5 grid gap-3">
           <input className="input-field" type="email" placeholder="Email address" value={identifier} onChange={(e) => setIdentifier(e.target.value)} required />
           <input className="input-field" placeholder="6-digit OTP" value={otp} onChange={(e) => setOtp(e.target.value)} maxLength="6" required />

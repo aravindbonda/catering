@@ -9,21 +9,21 @@ const roles = [
     label: 'User Login',
     title: 'Book catering',
     text: 'Select menus, manage your plate, and track confirmed orders.',
-    accent: 'from-saffron-600 to-orange-500'
+    accent: 'from-[#FC8019] to-[#D9B08C]'
   },
   {
     id: 'admin',
     label: 'Admin Login',
     title: 'Manage platform',
     text: 'Approve partners, assign orders, monitor users, and review analytics.',
-    accent: 'from-[#282C3F] to-saffron-600'
+    accent: 'from-[#7A2E1F] to-[#FC8019]'
   },
   {
     id: 'partner',
     label: 'Partner Login',
     title: 'Serve events',
     text: 'View assigned orders, update status, reviews, earnings, and calendar.',
-    accent: 'from-stone-900 to-saffron-700'
+    accent: 'from-[#2B110C] to-[#7A2E1F]'
   }
 ];
 
@@ -73,8 +73,9 @@ function Login() {
   return (
     <section className="section-wrap">
       <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
-        <div className="rounded-[2rem] bg-[#282C3F] p-8 text-white shadow-soft md:p-10">
-          <p className="font-bold uppercase tracking-[0.16em] text-orange-100">Secure access</p>
+        <div className="luxe-section rounded-[2rem] p-8 text-white shadow-luxe md:p-10">
+          <div className="relative z-10">
+          <p className="font-bold uppercase tracking-[0.16em] text-[#D9B08C]">Secure access</p>
           <h1 className="mt-4 text-4xl font-extrabold leading-tight md:text-5xl">Sign in by role and continue your catering workflow</h1>
           <p className="mt-5 leading-8 text-white/75">
             Customers book food, partners manage assigned events, and teams keep every catering request organized from one account.
@@ -83,7 +84,7 @@ function Login() {
             {roles.map((role) => (
               <button
                 className={`rounded-xl border p-4 text-left transition hover:-translate-y-0.5 ${
-                  activeTab === role.id ? 'border-orange-200 bg-white text-stone-950 shadow-xl' : 'border-white/15 bg-white/10 text-white'
+                  activeTab === role.id ? 'border-[#D9B08C] bg-white text-[#1F1F1F] shadow-xl' : 'border-white/15 bg-white/10 text-white'
                 }`}
                 key={role.id}
                 onClick={() => setActiveTab(role.id)}
@@ -93,23 +94,24 @@ function Login() {
                   {role.label.charAt(0)}
                 </span>
                 <strong className="block text-lg">{role.title}</strong>
-                <span className={`mt-1 block text-sm leading-6 ${activeTab === role.id ? 'text-[#686B78]' : 'text-white/75'}`}>{role.text}</span>
+                <span className={`mt-1 block text-sm leading-6 ${activeTab === role.id ? 'text-[#755F54]' : 'text-white/75'}`}>{role.text}</span>
               </button>
             ))}
+          </div>
           </div>
         </div>
 
         <div className="panel-card p-6 md:p-8">
           <div className="mb-6">
             <p className="eyebrow">{activeRole.label}</p>
-            <h2 className="mt-2 text-3xl font-extrabold text-stone-950">Welcome back</h2>
-            <p className="mt-2 text-sm leading-6 text-stone-600">Use your registered credentials to access the right dashboard.</p>
+            <h2 className="mt-2 text-3xl font-extrabold text-[#1F1F1F]">Welcome back</h2>
+            <p className="mt-2 text-sm leading-6 text-[#755F54]">Use your registered credentials to access the right dashboard.</p>
           </div>
 
-          <div className="mb-6 grid gap-2 rounded-xl bg-[#F5F5F5] p-1 sm:grid-cols-3">
+          <div className="mb-6 grid gap-2 rounded-2xl bg-[#F5F1EC] p-1 sm:grid-cols-3">
             {roles.map((role) => (
               <button
-                className={`rounded-lg px-3 py-3 text-sm font-extrabold transition ${activeTab === role.id ? 'bg-white text-saffron-700 shadow-sm' : 'text-stone-500 hover:text-stone-800'}`}
+                className={`rounded-xl px-3 py-3 text-sm font-extrabold transition ${activeTab === role.id ? 'bg-white text-[#7A2E1F] shadow-sm' : 'text-[#755F54] hover:text-[#1F1F1F]'}`}
                 key={role.id}
                 onClick={() => setActiveTab(role.id)}
                 type="button"
@@ -128,7 +130,7 @@ function Login() {
 
             <div className="grid gap-4">
               <label className="block">
-                <span className="mb-1 block text-sm font-bold text-stone-700">Email</span>
+                <span className="mb-1 block text-sm font-bold text-[#1F1F1F]">Email</span>
                 <input
                   className="input-field"
                   type="email"
@@ -140,7 +142,7 @@ function Login() {
               </label>
 
               <label className="block">
-                <span className="mb-1 block text-sm font-bold text-stone-700">Password</span>
+                <span className="mb-1 block text-sm font-bold text-[#1F1F1F]">Password</span>
                 <input
                   className="input-field"
                   type="password"
@@ -153,7 +155,7 @@ function Login() {
             </div>
 
             {activeTab === 'admin' && (
-              <div className="mt-4 rounded-xl border border-orange-100 bg-saffron-50 p-4 text-sm leading-6 text-[#282C3F]">
+              <div className="mt-4 rounded-2xl border border-[#EADCCB] bg-[#FFF7EF] p-4 text-sm leading-6 text-[#1F1F1F]">
                 <strong>Admin demo credentials</strong>
                 <br />
                 Email: admin@catering.com
@@ -167,15 +169,15 @@ function Login() {
             </button>
           </form>
 
-          <div className="mt-6 grid gap-2 text-center text-sm text-stone-600">
+          <div className="mt-6 grid gap-2 text-center text-sm text-[#755F54]">
             {activeTab === 'user' && (
               <>
-                <p>New customer? <Link className="font-bold text-saffron-700 hover:text-saffron-600" to="/register">Create account</Link></p>
-                <Link className="font-bold text-saffron-700 hover:text-saffron-600" to="/forgot-password">Forgot password?</Link>
+                <p>New customer? <Link className="font-bold text-[#7A2E1F] hover:text-[#FC8019]" to="/register">Create account</Link></p>
+                <Link className="font-bold text-[#7A2E1F] hover:text-[#FC8019]" to="/forgot-password">Forgot password?</Link>
               </>
             )}
             {activeTab === 'partner' && (
-              <p>Run a catering business? <Link className="font-bold text-saffron-700 hover:text-saffron-600" to="/register-partner">Register as partner</Link></p>
+              <p>Run a catering business? <Link className="font-bold text-[#7A2E1F] hover:text-[#FC8019]" to="/register-partner">Register as partner</Link></p>
             )}
           </div>
         </div>
