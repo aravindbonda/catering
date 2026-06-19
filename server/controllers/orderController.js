@@ -1,6 +1,7 @@
 const Order = require('../models/Order');
 const Menu = require('../models/Menu');
 const Notification = require('../models/Notification');
+const Tracking = require('../models/Tracking');
 const asyncHandler = require('../middleware/asyncHandler');
 const mongoose = require('mongoose');
 
@@ -92,6 +93,14 @@ const createOrder = asyncHandler(async (req, res) => {
     totalAmount: grandTotal
   });
 
+  await Tracking.create({
+    orderId: order._id,
+    currentStatus: order.status,
+    steps: [
+      { status: 'Admin Review', note: 'Booking request received', updatedBy: 'system' }
+    ]
+  });
+
   // Create notification for user
   await Notification.create({
     recipientId: req.user._id,
@@ -136,14 +145,11 @@ const getUserOrders = asyncHandler(async (req, res) => {
 });
 
 const getOrder = asyncHandler(async (req, res) => {
-  const order = await Order.findOne({
-    _id: req.params.id,
-    $or: [
-      { userId: req.user._id },
-      { partnerId: req.user._id },
-      { userId: req.user._id } // Admin can see all
-    ]
-  })
+  const filter = req.user.role === 'admin'
+    ? { _id: req.params.id }
+    : { _id: req.params.id, $or: [{ userId: req.user._id }, { partnerId: req.user._id }] };
+
+  const order = await Order.findOne(filter)
     .populate('userId', 'fullName email address')
     .populate('partnerId', 'fullName cateringBusinessName phone rating serviceAreas');
 
@@ -173,6 +179,15 @@ const cancelOrder = asyncHandler(async (req, res) => {
   order.cancellationReason = cancellationReason;
   order.cancelledAt = new Date();
   await order.save();
+
+  await Tracking.findOneAndUpdate(
+    { orderId: order._id },
+    {
+      currentStatus: 'Cancelled',
+      $push: { steps: { status: 'Cancelled', note: cancellationReason || 'Cancelled by customer', updatedBy: 'user', timestamp: new Date() } }
+    },
+    { upsert: true }
+  );
 
   // Create notifications
   await Notification.create({

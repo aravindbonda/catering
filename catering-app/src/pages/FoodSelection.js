@@ -144,7 +144,7 @@ function FoodSelection() {
   }, [sliderControls]);
 
   useEffect(() => {
-    api.get('/api/partners')
+    api.get('/api/partners/available')
       .then(({ data }) => {
         const approved = (data.partners || [])
           .filter((partner) => partner.status === 'approved')
@@ -172,7 +172,7 @@ function FoodSelection() {
     setBookingSearch((prev) => ({ ...prev, guestCount: total }));
   };
 
-  const handleFiles = (files) => {
+  const handleFiles = async (files) => {
     const accepted = Array.from(files).filter((file) => ['application/pdf', 'image/jpeg', 'image/png'].includes(file.type));
     if (!accepted.length) {
       setError('Please upload a PDF, JPG, or PNG file.');
@@ -187,23 +187,23 @@ function FoodSelection() {
       previewUrl: file.type.startsWith('image/') ? URL.createObjectURL(file) : ''
     }));
     setUploadedFiles(previews);
-    setUploadProgress(0);
+    setUploadProgress(20);
     setExtractionState('uploading');
 
-    let progress = 0;
-    const timer = setInterval(() => {
-      progress += 12;
-      setUploadProgress(Math.min(progress, 100));
-
-      if (progress >= 100) {
-        clearInterval(timer);
-        setExtractionState('extracting');
-        setTimeout(() => {
-          setExtractedItems(sampleExtractedItems);
-          setExtractionState('done');
-        }, 900);
-      }
-    }, 120);
+    try {
+      const form = new FormData();
+      accepted.forEach((file) => form.append('files', file));
+      const { data } = await api.post('/api/uploads/menu', form, { headers: { 'Content-Type': 'multipart/form-data' } });
+      setUploadProgress(100);
+      setExtractionState('done');
+      setUploadedFiles(data.files?.length ? data.files : previews);
+      setExtractedItems(data.extractedItems?.length ? data.extractedItems : sampleExtractedItems);
+    } catch (err) {
+      setUploadProgress(100);
+      setExtractionState('done');
+      setExtractedItems(sampleExtractedItems);
+      setError(err.response?.data?.message || 'Using mock extraction because upload API is unavailable.');
+    }
   };
 
   const perPlatePrice = useMemo(() => extractedItems.reduce((sum, item) => sum + item.price * item.quantity, 0), [extractedItems]);

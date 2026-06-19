@@ -33,7 +33,8 @@ const publicPartner = (partner) => ({
   profileImage: partner.profileImage,
   rating: partner.rating,
   totalOrders: partner.totalOrders,
-  earnings: partner.earnings
+  earnings: partner.earnings,
+  role: 'partner'
 });
 
 const register = asyncHandler(async (req, res) => {
@@ -285,6 +286,10 @@ const resetPassword = asyncHandler(async (req, res) => {
 });
 
 const me = asyncHandler(async (req, res) => {
+  if (req.user.cateringBusinessName !== undefined) {
+    return res.json({ success: true, user: publicPartner(req.user) });
+  }
+
   res.json({ success: true, user: publicUser(req.user) });
 });
 

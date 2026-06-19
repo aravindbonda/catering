@@ -12,8 +12,8 @@ function OrderConfirmation() {
         {order && (
           <div className="mt-6 grid gap-3 rounded-2xl bg-[#F5F1EC] p-4 text-left text-sm">
             <span>Order ID: <strong>{order._id}</strong></span>
-            <span>Total Plates: <strong>{order.attendees}</strong></span>
-            <span>Total Cost: <strong>Rs.{order.totalCost}</strong></span>
+            <span>Total Plates: <strong>{order.guestCount}</strong></span>
+            <span>Total Cost: <strong>Rs.{(order.totalAmount || 0).toLocaleString('en-IN')}</strong></span>
             <span>Status: <strong>{order.status}</strong></span>
           </div>
         )}

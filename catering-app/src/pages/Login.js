@@ -28,13 +28,13 @@ const roles = [
 ];
 
 function Login() {
-  const [activeTab, setActiveTab] = useState('user');
+  const location = useLocation();
+  const [activeTab, setActiveTab] = useState(location.state?.role || 'user');
   const [form, setForm] = useState({ identifier: '', password: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { login, saveSession } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
 
   const submit = async (event) => {
     event.preventDefault();
@@ -56,7 +56,7 @@ function Login() {
       }
 
       const requestedPath = location.state?.from?.pathname || location.state?.from || null;
-      const dashboardPath = account.role === 'admin' ? '/admin' : account.role === 'partner' ? '/partner' : '/orders';
+      const dashboardPath = account.role === 'admin' ? '/admin' : account.role === 'partner' ? '/partner' : '/dashboard';
       navigate(requestedPath || dashboardPath, {
         replace: true,
         state: location.state?.booking ? { booking: location.state.booking } : undefined

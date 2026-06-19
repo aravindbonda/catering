@@ -3,6 +3,7 @@ const Order = require('../models/Order');
 const Notification = require('../models/Notification');
 const Review = require('../models/Review');
 const Earning = require('../models/Earning');
+const Tracking = require('../models/Tracking');
 const asyncHandler = require('../middleware/asyncHandler');
 
 const publicPartner = (partner) => ({
@@ -142,7 +143,7 @@ const getPartnerOrders = asyncHandler(async (req, res) => {
 
 const updateOrderStatus = asyncHandler(async (req, res) => {
   const { status } = req.body;
-  const validStatuses = ['Accepted', 'Preparing', 'Out for Service', 'Completed', 'Cancelled'];
+  const validStatuses = ['Accepted', 'Rejected', 'Preparing', 'Out for Service', 'Completed', 'Cancelled'];
 
   if (!validStatuses.includes(status)) {
     res.status(400);
@@ -159,6 +160,15 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
     res.status(404);
     throw new Error('Order not found or not assigned to you');
   }
+
+  await Tracking.findOneAndUpdate(
+    { orderId: order._id },
+    {
+      currentStatus: status,
+      $push: { steps: { status, note: 'Partner updated order status', updatedBy: 'partner', timestamp: new Date() } }
+    },
+    { upsert: true }
+  );
 
   // Create notification for user
   await Notification.create({

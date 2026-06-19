@@ -8,6 +8,11 @@ const orderRoutes = require('./routes/orderRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const partnerRoutes = require('./routes/partnerRoutes');
 const menuRoutes = require('./routes/menuRoutes');
+const eventRoutes = require('./routes/eventRoutes');
+const uploadRoutes = require('./routes/uploadRoutes');
+const reviewRoutes = require('./routes/reviewRoutes');
+const paymentRoutes = require('./routes/paymentRoutes');
+const trackingRoutes = require('./routes/trackingRoutes');
 const errorMiddleware = require('./middleware/errorMiddleware');
 const User = require('./models/User');
 
@@ -18,6 +23,7 @@ const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:3000';
 app.use(cors({ origin: CLIENT_URL, credentials: true }));
 app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ extended: true }));
+app.use('/uploads', express.static('uploads'));
 
 app.get('/', (req, res) => {
   res.json({ success: true, message: 'CaterBliss API is running' });
@@ -28,6 +34,11 @@ app.use('/api/orders', orderRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/partners', partnerRoutes);
 app.use('/api/menu', menuRoutes);
+app.use('/api/events', eventRoutes);
+app.use('/api/uploads', uploadRoutes);
+app.use('/api/reviews', reviewRoutes);
+app.use('/api/payments', paymentRoutes);
+app.use('/api/tracking', trackingRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ success: false, message: 'Route not found' });

@@ -17,7 +17,7 @@ function Navbar() {
     setProfileOpen(false);
   };
 
-  const dashboardPath = user?.role === 'admin' ? '/admin' : user?.role === 'partner' ? '/partner' : '/orders';
+  const dashboardPath = user?.role === 'admin' ? '/admin' : user?.role === 'partner' ? '/partner' : '/dashboard';
 
   return (
     <header className="sticky top-0 z-40 border-b border-white/10 bg-[#4B1D14]/88 shadow-lg shadow-[#2B110C]/10 backdrop-blur-xl">
@@ -41,10 +41,12 @@ function Navbar() {
         <div className={`${open ? 'flex' : 'hidden'} absolute left-4 right-4 top-[72px] flex-col gap-3 rounded-[1.5rem] border border-[#EADCCB] bg-[#4B1D14] p-4 shadow-luxe md:static md:flex md:flex-row md:items-center md:border-0 md:bg-transparent md:p-0 md:shadow-none`}>
           <nav className="flex flex-col gap-1 md:flex-row md:items-center md:gap-2">
             <NavLink className={navClass} to="/" onClick={closeMenus}>Home</NavLink>
+            <NavLink className={navClass} to="/book" onClick={closeMenus}>Book</NavLink>
+            <NavLink className={navClass} to="/orders" onClick={closeMenus}>Orders</NavLink>
             <a className="rounded-full px-4 py-2 text-sm font-bold text-white/82 transition hover:bg-white/12 hover:text-white" href="/#services" onClick={() => setOpen(false)}>Services</a>
             <a className="rounded-full px-4 py-2 text-sm font-bold text-white/82 transition hover:bg-white/12 hover:text-white" href="/#vendors" onClick={() => setOpen(false)}>Vendors</a>
             <a className="rounded-full px-4 py-2 text-sm font-bold text-white/82 transition hover:bg-white/12 hover:text-white" href="/#about" onClick={() => setOpen(false)}>About</a>
-            <a className="rounded-full px-4 py-2 text-sm font-bold text-white/82 transition hover:bg-white/12 hover:text-white" href="#contact" onClick={() => setOpen(false)}>Contact</a>
+            <NavLink className={navClass} to="/contact" onClick={closeMenus}>Contact</NavLink>
             {user?.role === 'admin' && <NavLink className={navClass} to="/admin" onClick={closeMenus}>Admin</NavLink>}
             {user?.role === 'partner' && <NavLink className={navClass} to="/partner" onClick={closeMenus}>Partner</NavLink>}
           </nav>

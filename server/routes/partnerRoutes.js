@@ -17,11 +17,25 @@ const { protect, adminOnly, partnerOnly } = require('../middleware/authMiddlewar
 
 const router = express.Router();
 
+router.get('/available', (req, res, next) => {
+  req.query.status = 'approved';
+  return getPartners(req, res, next);
+});
+
 // Partner routes
 router.get('/profile/me', protect, partnerOnly, getPartnerProfile);
 router.put('/profile/me', protect, partnerOnly, updatePartnerProfile);
 router.get('/dashboard/stats', protect, partnerOnly, getPartnerDashboard);
 router.get('/orders/my', protect, partnerOnly, getPartnerOrders);
+router.get('/my-orders', protect, partnerOnly, async (req, res, next) => {
+  try {
+    const originalJson = res.json.bind(res);
+    res.json = (payload) => originalJson({ ...payload, partner: req.user });
+    return getPartnerOrders(req, res, next);
+  } catch (error) {
+    return next(error);
+  }
+});
 router.patch('/orders/:id/status', protect, partnerOnly, updateOrderStatus);
 router.get('/earnings/my', protect, partnerOnly, getPartnerEarnings);
 router.get('/reviews/my', protect, partnerOnly, getPartnerReviews);

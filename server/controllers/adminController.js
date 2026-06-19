@@ -4,6 +4,7 @@ const Partner = require('../models/Partner');
 const Menu = require('../models/Menu');
 const Notification = require('../models/Notification');
 const Earning = require('../models/Earning');
+const Tracking = require('../models/Tracking');
 const asyncHandler = require('../middleware/asyncHandler');
 
 const getDashboardStats = asyncHandler(async (req, res) => {
@@ -120,6 +121,15 @@ const assignPartner = asyncHandler(async (req, res) => {
   order.assignedAt = new Date();
   await order.save();
 
+  await Tracking.findOneAndUpdate(
+    { orderId: order._id },
+    {
+      currentStatus: order.status,
+      $push: { steps: { status: 'Payment Pending', note: 'Admin assigned catering partner', updatedBy: 'admin', timestamp: new Date() } }
+    },
+    { upsert: true }
+  );
+
   // Update partner stats
   partner.totalOrders += 1;
   await partner.save();
@@ -166,6 +176,15 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
   }
 
   await order.save();
+
+  await Tracking.findOneAndUpdate(
+    { orderId: order._id },
+    {
+      currentStatus: status,
+      $push: { steps: { status, note: 'Admin updated order status', updatedBy: 'admin', timestamp: new Date() } }
+    },
+    { upsert: true }
+  );
 
   res.json({ success: true, order });
 });

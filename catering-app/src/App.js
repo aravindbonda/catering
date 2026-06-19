@@ -15,6 +15,15 @@ import Orders from './pages/Orders';
 import OrderConfirmation from './pages/OrderConfirmation';
 import AdminDashboard from './pages/AdminDashboard';
 import PartnerDashboard from './pages/PartnerDashboard';
+import UserDashboard from './pages/UserDashboard';
+import MenuUpload from './pages/MenuUpload';
+import CostEstimator from './pages/CostEstimator';
+import TrackOrder from './pages/TrackOrder';
+import Payments from './pages/Payments';
+import Reviews from './pages/Reviews';
+import Contact from './pages/Contact';
+import AdminLogin from './pages/AdminLogin';
+import PartnerLogin from './pages/PartnerLogin';
 import './App.css';
 
 const ProtectedRoute = ({ children, admin = false, role }) => {
@@ -42,10 +51,19 @@ function AppRoutes() {
           <Route path="/register" element={<Register />} />
           <Route path="/register-partner" element={<PartnerRegister />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/admin-login" element={<AdminLogin />} />
+          <Route path="/partner-login" element={<PartnerLogin />} />
           <Route path="/verify-otp" element={<VerifyOtp />} />
           <Route path="/verify-partner-otp" element={<VerifyPartnerOtp />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/book" element={<ProtectedRoute><FoodSelection /></ProtectedRoute>} />
+          <Route path="/dashboard" element={<ProtectedRoute><UserDashboard /></ProtectedRoute>} />
+          <Route path="/menu-upload" element={<ProtectedRoute><MenuUpload /></ProtectedRoute>} />
+          <Route path="/cost-estimator" element={<ProtectedRoute><CostEstimator /></ProtectedRoute>} />
+          <Route path="/track-order" element={<ProtectedRoute><TrackOrder /></ProtectedRoute>} />
+          <Route path="/payments" element={<ProtectedRoute><Payments /></ProtectedRoute>} />
+          <Route path="/reviews" element={<ProtectedRoute><Reviews /></ProtectedRoute>} />
+          <Route path="/contact" element={<Contact />} />
           <Route path="/orders" element={<ProtectedRoute><Orders /></ProtectedRoute>} />
           <Route path="/orders/:id/confirmed" element={<ProtectedRoute><OrderConfirmation /></ProtectedRoute>} />
           <Route path="/admin" element={<ProtectedRoute admin><AdminDashboard /></ProtectedRoute>} />

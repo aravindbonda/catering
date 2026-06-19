@@ -1294,6 +1294,10 @@ img {
   margin-bottom: 2rem;
 }
 
+.ml-2{
+  margin-left: 0.5rem;
+}
+
 .mt-1{
   margin-top: 0.25rem;
 }
@@ -1424,6 +1428,10 @@ img {
 
 .min-h-24{
   min-height: 6rem;
+}
+
+.min-h-32{
+  min-height: 8rem;
 }
 
 .min-h-48{
@@ -2387,6 +2395,10 @@ img {
     grid-template-columns: 1fr 1fr 0.9fr;
   }
 
+  .md\:grid-cols-\[1fr_auto\]{
+    grid-template-columns: 1fr auto;
+  }
+
   .md\:flex-row{
     flex-direction: row;
   }
@@ -2459,6 +2471,10 @@ img {
 
   .lg\:top-28{
     top: 7rem;
+  }
+
+  .lg\:grid-cols-2{
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .lg\:grid-cols-3{
